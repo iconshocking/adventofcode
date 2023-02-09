@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "build": true,
+    "target": "es2021",
+    "esModuleInterop": true,
+    "module": "commonjs"
+  },
+  "include": ["*"]
+}
