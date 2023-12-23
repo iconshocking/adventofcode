@@ -37,20 +37,35 @@ function pt2() {
     movesCount: 0,
     atCycleEnd: false,
   }));
-  for (const state of states) {
-    do {
-      for (const move of moves) {
-        state.curNode = nodes.get(state.curNode)![move === "L" ? 0 : 1];
-        state.movesCount++;
-        if (state.curNode.endsWith("Z")) {
-          state.atCycleEnd = true;
+  const go = () => {
+    for (const state of states) {
+      do {
+        for (const move of moves) {
+          state.curNode = nodes.get(state.curNode)![move === "L" ? 0 : 1];
+          state.movesCount++;
+          if (state.curNode.endsWith("Z")) {
+            state.atCycleEnd = true;
+          }
         }
-      }
-    } while (!state.atCycleEnd);
-  }
+      } while (!state.atCycleEnd);
+    }
+  };
+  go();
+  const stepsToCycleStarts = states.map((state) => state.movesCount);
+  states.forEach((state) => {
+    state.movesCount = 0;
+    state.atCycleEnd = false;
+  });
+  go();
+  const stepsForCycles = states.map((state) => state.movesCount);
+  // moves for entry into cycles are same as moves within the cycles, so we can try LCM
+  log(stepsToCycleStarts, stepsForCycles);
 
   const movesCycleCount = moves.length;
   const cyclesRequired = states.map((state) => state.movesCount / movesCycleCount);
+  // all cycles are divisble by movesCycleCoun and are prime, so we can use LCM
+  log(cyclesRequired);
+
   const totalCyclesRequired = cyclesRequired.reduce((acc, cycles) => acc * cycles, 1);
   const totalMoves = totalCyclesRequired * movesCycleCount;
   log(totalMoves);
